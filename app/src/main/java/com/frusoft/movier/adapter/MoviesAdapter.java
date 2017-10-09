@@ -1,7 +1,6 @@
 package com.frusoft.movier.adapter;
 
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,16 +18,16 @@ import java.util.List;
  * Created by nfrugoni on 8/10/17.
  */
 
+@SuppressWarnings("DefaultFileTemplate")
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
-    List<Movie> moviesList;
-    MoviesAdapterOnClickHandler onClickHandler;
+    private List<Movie> moviesList;
+    private final MoviesAdapterOnClickHandler onClickHandler;
 
     @Override
     public MoviesAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_card_preview, parent, false);
-        MoviesAdapterViewHolder viewHolder = new MoviesAdapterViewHolder(view);
-        return viewHolder;
+        return new MoviesAdapterViewHolder(view);
     }
 
     @Override
@@ -47,10 +46,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         notifyDataSetChanged();
     }
 
-    public List<Movie> getMoviesList() {
-        return moviesList;
-    }
-
     public interface MoviesAdapterOnClickHandler {
         void onClick(Movie movie);
     }
@@ -61,9 +56,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     class MoviesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView mPosterImageView;
-        TextView mTitleTextView;
-        TextView mVoteAverageTextView;
+        final ImageView mPosterImageView;
+        final TextView mTitleTextView;
+        final TextView mVoteAverageTextView;
 
 
         public MoviesAdapterViewHolder(View itemView) {

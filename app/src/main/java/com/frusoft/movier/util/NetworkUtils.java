@@ -1,7 +1,6 @@
 package com.frusoft.movier.util;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +25,7 @@ import java.util.Scanner;
  * Created by nfrugoni on 8/10/17.
  */
 
+@SuppressWarnings("DefaultFileTemplate")
 public class NetworkUtils {
     private static final String API_KEY_PARAM = "api_key";
     private static final String API_KEY_VALUE = "fec50854fb1d9d3eb657ddb944b6f45c";

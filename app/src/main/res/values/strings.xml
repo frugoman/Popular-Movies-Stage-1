@@ -3,4 +3,8 @@
     <string name="error_fetching_movies">There was an error retrieving the movies.  Try again later!</string>
     <string name="card_poster_image_content_description">Poster Image</string>
     <string name="vote_average_title">Vote Average: %s</string>
+    <string name="original_title">Original Title</string>
+    <string name="user_rating">User Rating</string>
+    <string name="release_date">Release Date</string>
+    <string name="plot_synopsis">Plot Synopsis</string>
 </resources>

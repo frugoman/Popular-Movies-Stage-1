@@ -20,11 +20,11 @@
 
             <ImageView
                 android:id="@+id/iv_details_preview_poster"
+                android:contentDescription="@string/card_poster_image_content_description"
                 android:layout_width="match_parent"
                 android:layout_height="176dp"
                 android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                app:srcCompat="@color/colorAccent" />
+                android:scaleType="centerCrop" />
 
 
             <TextView
@@ -42,11 +42,11 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="72dp"
                 android:paddingRight="16dp"
@@ -57,7 +57,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="24dp"
-                    android:text="Original Title"
+                    android:text="@string/original_title"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -71,7 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
-                    android:text="User Rating"
+                    android:text="@string/user_rating"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -85,7 +85,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
-                    android:text="Release Date"
+                    android:text="@string/release_date"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -99,7 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
-                    android:text="Plot Synopsis"
+                    android:text="@string/plot_synopsis"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 

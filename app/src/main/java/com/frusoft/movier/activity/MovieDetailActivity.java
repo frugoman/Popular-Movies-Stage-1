@@ -20,13 +20,13 @@ import java.io.IOException;
 public class MovieDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_KEY_MOVIE_ID = "movieID";
-    ProgressBar mLoadingIndicator;
-    TextView mTitleTextView;
-    TextView mOriginalTitleTextView;
-    TextView mUserRatingTextView;
-    TextView mReleaseDateTextView;
-    TextView mOverviewTextView;
-    ImageView mPosterImageView;
+    private ProgressBar mLoadingIndicator;
+    private TextView mTitleTextView;
+    private TextView mOriginalTitleTextView;
+    private TextView mUserRatingTextView;
+    private TextView mReleaseDateTextView;
+    private TextView mOverviewTextView;
+    private ImageView mPosterImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         mOverviewTextView.setText(movie.getOverview());
     }
 
-    class MovieDetailFetcher extends AsyncTask<Integer, Void, Movie> {
+    private class MovieDetailFetcher extends AsyncTask<Integer, Void, Movie> {
 
         @Override
         protected void onPreExecute() {
@@ -73,9 +73,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 Integer id = ids[0];
                 if (id == -1) return null;
                 movie = NetworkUtils.getMovieWithId(id);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
             return movie;

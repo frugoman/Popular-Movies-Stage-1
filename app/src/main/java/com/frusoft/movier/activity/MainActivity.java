@@ -2,7 +2,6 @@ package com.frusoft.movier.activity;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.sax.StartElementListener;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.frusoft.movier.R;
 import com.frusoft.movier.adapter.MoviesAdapter;
@@ -24,17 +22,15 @@ import com.frusoft.movier.util.NetworkUtils;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler{
 
-    ProgressBar mLoadingIndicator;
-    TextView mErrorMessageTextView;
-    RecyclerView mRecyclerView;
-    MoviesAdapter mAdapter;
-    MovieSortOrder sortOrderSelected;
+    private ProgressBar mLoadingIndicator;
+    private TextView mErrorMessageTextView;
+    private RecyclerView mRecyclerView;
+    private MoviesAdapter mAdapter;
+    private MovieSortOrder sortOrderSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,10 +105,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             List<Movie> popularMovies = null;
             try {
                 popularMovies = NetworkUtils.getMovies(sortOrderSelected);
-            } catch (IOException e) {
-                e.printStackTrace();
-                showErrorMessage();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
                 showErrorMessage();
             }
