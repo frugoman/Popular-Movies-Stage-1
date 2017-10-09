@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.frusoft.movier.activity.MainActivity"
+    android:background="#dadada">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_movies_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/tv_error_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:text="@string/error_fetching_movies"
+        android:textAlignment="center"
+        android:textSize="32sp"
+        android:visibility="invisible" />
+
+    <include layout="@layout/loading_indicator" />
+
+</FrameLayout>
