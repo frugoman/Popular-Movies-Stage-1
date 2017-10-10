@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.frusoft.movier.BuildConfig;
 import com.frusoft.movier.model.Movie;
 import com.frusoft.movier.model.MovieSortOrder;
 import com.google.gson.Gson;
@@ -28,7 +29,7 @@ import java.util.Scanner;
 @SuppressWarnings("DefaultFileTemplate")
 public class NetworkUtils {
     private static final String API_KEY_PARAM = "api_key";
-    private static final String API_KEY_VALUE = "APIKEYHERE";
+    private static final String API_KEY_VALUE = BuildConfig.API_KEY;
     private static final String API_SCHEME = "https";
     private static final String API_BASE_URL = "api.themoviedb.org";
     private static final String API_VERSION = "3";

@@ -1,11 +1,11 @@
 package com.frusoft.movier.activity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,37 +17,37 @@ import com.frusoft.movier.R;
 import com.frusoft.movier.adapter.MoviesAdapter;
 import com.frusoft.movier.model.Movie;
 import com.frusoft.movier.model.MovieSortOrder;
-import com.frusoft.movier.util.NetworkUtils;
+import com.frusoft.movier.util.AsyncTaskCompletionListener;
+import com.frusoft.movier.util.MoviesArrayFetcher;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler{
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    private ProgressBar mLoadingIndicator;
-    private TextView mErrorMessageTextView;
-    private RecyclerView mRecyclerView;
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
+
+    @BindView(R.id.pb_loading_indicator)
+    ProgressBar mLoadingIndicator;
+    @BindView(R.id.tv_error_message)
+    TextView mErrorMessageTextView;
+    @BindView(R.id.rv_movies_container)
+    RecyclerView mRecyclerView;
     private MoviesAdapter mAdapter;
-    private MovieSortOrder sortOrderSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movies_container);
-        mErrorMessageTextView = (TextView) findViewById(R.id.tv_error_message);
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        ButterKnife.bind(this);
 
-
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfComumns());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new MoviesAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
-        sortOrderSelected = MovieSortOrder.MOST_POPULAR;
-        new MovieFetcher().execute();
+
+        new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener()).execute(MovieSortOrder.MOST_POPULAR);
 
     }
 
@@ -63,60 +63,58 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        new MenuInflater(this).inflate(R.menu.main_menu,menu);
+        new MenuInflater(this).inflate(R.menu.main_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.action_sort_high_rating:
-                sortOrderSelected = MovieSortOrder.HIGH_RATING;
-                new MovieFetcher().execute();
+                new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener()).execute(MovieSortOrder.HIGH_RATING);
                 break;
             case R.id.action_sort_most_popular:
-                sortOrderSelected = MovieSortOrder.MOST_POPULAR;
-                new MovieFetcher().execute();
+                new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener()).execute(MovieSortOrder.MOST_POPULAR);
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private int numberOfComumns() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int widthDivider = 400;
+        int width = metrics.widthPixels;
+        int columnCount = width / widthDivider;
+        if (columnCount < 2)
+            columnCount = 2;
+        return columnCount;
+    }
+
     @Override
     public void onClick(Movie movie) {
-        Intent intent = new Intent(this,MovieDetailActivity.class);
-        intent.putExtra(MovieDetailActivity.EXTRA_KEY_MOVIE_ID,movie.getId());
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+        intent.putExtra(MovieDetailActivity.EXTRA_KEY_MOVIE_ID, movie.getId());
         startActivity(intent);
     }
 
-    private class MovieFetcher extends AsyncTask<Void, Void, List<Movie>> {
+    private class MoviesFetcherOnCompleteListener implements AsyncTaskCompletionListener<List<Movie>> {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        public void OnFetchPreExecute() {
             mAdapter.setMoviesList(null);
             showResultsView();
             mLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected List<Movie> doInBackground(Void... voids) {
-            List<Movie> popularMovies = null;
-            try {
-                popularMovies = NetworkUtils.getMovies(sortOrderSelected);
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
+        public void OnFetchCompleteWithResult(List<Movie> movies) {
+            if (movies == null) {
                 showErrorMessage();
+            } else {
+                mAdapter.setMoviesList(movies);
             }
-            return popularMovies;
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> movies) {
-            super.onPostExecute(movies);
-
-            mAdapter.setMoviesList(movies);
             mLoadingIndicator.setVisibility(View.INVISIBLE);
         }
     }

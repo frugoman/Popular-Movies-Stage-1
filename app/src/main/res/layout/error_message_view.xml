@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_error_message"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="16dp"
+    android:text="@string/error_fetching_movies"
+    android:textAlignment="center"
+    android:textSize="32sp"
+    android:visibility="invisible"
+    tools:showIn="@layout/activity_movie_detail"/>

@@ -73,7 +73,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
             if (movie != null) {
                 mTitleTextView.setText(movie.getTitle());
                 mVoteAverageTextView.setText(String.format(context.getString(R.string.vote_average_title), movie.getVoteAverage()));
-                Picasso.with(context).load(movie.getPosterPathUrl()).into(mPosterImageView);
+                Picasso.with(context).load(movie.getPosterPathUrl()).placeholder(R.drawable.movie_poster_placeholder).error(R.drawable.movie_poster_error_placeholder).into(mPosterImageView);
             }
         }
 
