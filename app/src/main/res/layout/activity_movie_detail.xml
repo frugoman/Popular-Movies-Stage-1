@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,96 +10,126 @@
         android:id="@+id/ll_detail_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible">
+        android:visibility="visible">
 
-
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/iv_details_preview_poster"
-                android:layout_width="match_parent"
-                android:layout_height="172dp"
-                android:layout_gravity="center"
-                android:contentDescription="@string/card_poster_image_content_description"
-                android:scaleType="centerCrop" />
-
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="16dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp">
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="0dp"
+                android:background="@color/colorPrimary"
+                app:layout_constraintHorizontal_bias="0.47"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
+
                     android:id="@+id/tv_details_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:textSize="@dimen/detail_movie_title_size"
-                    android:textStyle="bold" />
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="72dp"
+                    android:layout_marginRight="16dp"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    tools:text="The Hunger Games: Mockinjay - Part 2" />
+            </android.support.constraint.ConstraintLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="24dp"
-                    android:text="@string/original_title"
-                    android:textSize="@dimen/detail_element_title_size"
-                    android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/iv_details_preview_poster"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/movie_poster_placeholder"
+                android:layout_marginTop="8dp"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/view"
+                tools:layout_editor_absoluteY="173dp" />
 
-                <TextView
-                    android:id="@+id/tv_details_original_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/detail_element_value_size" />
+            <android.support.constraint.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/guideline"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:text="@string/user_rating"
-                    android:textSize="@dimen/detail_element_title_size"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_details_release_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="8dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="@+id/tv_details_original_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_details_original_title"
+                tools:text="2017" />
 
-                <TextView
-                    android:id="@+id/tv_details_user_rating"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/detail_element_value_size" />
+            <TextView
+                android:id="@+id/tv_details_user_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="8dp"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="@+id/tv_details_release_date"
+                app:layout_constraintTop_toBottomOf="@+id/tv_details_release_date"
+                tools:text="8.1/10" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:text="@string/release_date"
-                    android:textSize="@dimen/detail_element_title_size"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_details_original_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toLeftOf="@id/guideline"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view"
+                tools:text="The Hunger Games 5: Mockinjay" />
 
-                <TextView
-                    android:id="@+id/tv_details_release_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/detail_element_value_size" />
+            <TextView
+                android:id="@+id/tv_details_overview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/breakerLine"
+                tools:text="Caesar and his apes are forced into a deadly conflict with an army of humans led by a ruthless Colonel. After the apes suffer unimaginable losses, Caesar wrestles with his darker instincts and begins his own mythic quest to avenge his kind. As the journey finally brings them face to face, Caesar and the Colonel are pitted against each other in an epic battle that will determine the fate of both their species and the future of the planet."
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:text="@string/plot_synopsis"
-                    android:textSize="@dimen/detail_element_title_size"
-                    android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/breakerLine"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:srcCompat="@color/colorPrimary"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/iv_details_preview_poster" />
 
-                <TextView
-                    android:id="@+id/tv_details_overview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/detail_element_value_size" />
-            </LinearLayout>
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
+
     </ScrollView>
 
     <include layout="@layout/error_message_view" />

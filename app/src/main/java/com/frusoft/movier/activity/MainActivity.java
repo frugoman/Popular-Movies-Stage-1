@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     TextView mErrorMessageTextView;
     @BindView(R.id.rv_movies_container)
     RecyclerView mRecyclerView;
+
     private MoviesAdapter mAdapter;
 
     @Override
@@ -41,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfComumns());
-        mRecyclerView.setLayoutManager(layoutManager);
+        GridLayoutManager moviesLayoutManager = new GridLayoutManager(this, numberOfComumns());
+        mRecyclerView.setLayoutManager(moviesLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new MoviesAdapter(this);
         mRecyclerView.setAdapter(mAdapter);

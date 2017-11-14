@@ -20,6 +20,16 @@ public class Movie {
     @SerializedName("poster_path")
     private String posterPathUrl;
     private Double popularity;
+    private MovieVideo movieVideo;
+    private MovieReview movieReview;
+
+    public MovieVideo getMovieVideo() {
+        return movieVideo;
+    }
+
+    public void setMovieVideo(MovieVideo movieVideo) {
+        this.movieVideo = movieVideo;
+    }
 
     public int getId() {
         return id;

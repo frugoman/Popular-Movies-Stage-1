@@ -1,7 +1,5 @@
 package com.frusoft.movier.util;
 
-import android.content.Context;
-
 import com.frusoft.movier.model.Movie;
 import com.frusoft.movier.model.MovieSortOrder;
 
@@ -27,7 +25,7 @@ public class MoviesArrayFetcher extends BaseFetcherTask<MovieSortOrder, String, 
             MovieSortOrder sort = params[0];
             if(sort == null)
                 sort = MovieSortOrder.MOST_POPULAR;
-            popularMovies = NetworkUtils.getMovies(sort);
+            popularMovies = MoviesNetworkUtils.getMovies(sort);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }

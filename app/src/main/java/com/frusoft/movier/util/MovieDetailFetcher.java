@@ -24,7 +24,7 @@ public class MovieDetailFetcher extends BaseFetcherTask<Integer,Void,Movie> {
         try {
             Integer id = ids[0];
             if (id == -1) return null;
-            movie = NetworkUtils.getMovieWithId(id);
+            movie = MoviesNetworkUtils.getMovieWithId(id);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
