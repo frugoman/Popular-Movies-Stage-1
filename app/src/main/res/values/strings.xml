@@ -9,4 +9,12 @@
     <string name="plot_synopsis">Plot Synopsis</string>
     <string name="action_sort_by_most_popular">Sort by Most Popular</string>
     <string name="action_sort_by_high_rating">Sort by High Rating</string>
+    <string name="movie_poster_content_description">Movie poster</string>
+    <string name="user_ratings">User Ratings</string>
+    <string name="reviews">Reviews</string>
+    <string name="break_line">Break line image</string>
+    <string name="videos">Videos</string>
+    <string name="fab_fav_movie_detail_action_delete_toast">Deleted from favorites</string>
+    <string name="fab_fav_movie_detail_action_add_toast">Saved as favorite</string>
+    <string name="action_sort_by_favorite">Show Favorites</string>
 </resources>

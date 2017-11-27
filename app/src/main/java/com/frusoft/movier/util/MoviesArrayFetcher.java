@@ -1,5 +1,7 @@
 package com.frusoft.movier.util;
 
+import android.content.Context;
+
 import com.frusoft.movier.model.Movie;
 import com.frusoft.movier.model.MovieSortOrder;
 
@@ -14,8 +16,8 @@ import java.util.List;
 
 public class MoviesArrayFetcher extends BaseFetcherTask<MovieSortOrder, String, List<Movie>> {
 
-    public MoviesArrayFetcher(AsyncTaskCompletionListener<List<Movie>> completionListener) {
-        super(completionListener);
+    public MoviesArrayFetcher(AsyncTaskCompletionListener<List<Movie>> completionListener, Context context) {
+        super(completionListener, context);
     }
 
     @Override
@@ -23,9 +25,15 @@ public class MoviesArrayFetcher extends BaseFetcherTask<MovieSortOrder, String, 
         List<Movie> popularMovies = null;
         try {
             MovieSortOrder sort = params[0];
-            if(sort == null)
+            if (sort == null)
                 sort = MovieSortOrder.MOST_POPULAR;
-            popularMovies = MoviesNetworkUtils.getMovies(sort);
+
+            if (sort == MovieSortOrder.FAVORITES) {
+                popularMovies = MoviesDBUtils.getAllMoviesFromFavorites(mContext);
+            } else {
+                popularMovies = MoviesNetworkUtils.getMovies(sort);
+            }
+
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }

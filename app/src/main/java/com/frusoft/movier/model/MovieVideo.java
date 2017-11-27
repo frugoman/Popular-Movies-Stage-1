@@ -4,7 +4,7 @@ package com.frusoft.movier.model;
  * Created by nfrugoni on 13/11/17.
  */
 
-class MovieVideo {
+public class MovieVideo {
     private String id;
     private String key;
     private String name;

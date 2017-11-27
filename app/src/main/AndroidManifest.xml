@@ -26,6 +26,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
+        <provider
+            android:authorities="com.frusoft.movier.activity"
+            android:name=".activity.MovieContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

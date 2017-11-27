@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.frusoft.movier.model.Movie;
+import com.frusoft.movier.model.MovieReview;
 import com.frusoft.movier.model.MovieSortOrder;
+import com.frusoft.movier.model.MovieVideo;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -22,7 +24,7 @@ import java.util.List;
  * Created by nfrugoni on 13/11/17.
  */
 
-public class MoviesNetworkUtils extends NetworkUtils{
+public class MoviesNetworkUtils extends NetworkUtils {
 
     private static final String KEY_TAG = "MoviesNetworkUtils";
 
@@ -30,7 +32,7 @@ public class MoviesNetworkUtils extends NetworkUtils{
     private static final String API_RESOURCE_POPULAR = "popular";
     private static final String API_RESOURCE_TOP_RATED = "top_rated";
     private static final String API_RESOURCE_MOVIE_REVIEW = "reviews";
-    private static final String API_RESOURCE_MOVIE_TAILERS = "videos";
+    private static final String API_RESOURCE_MOVIE_TRAILERS = "videos";
     private static final String RESULT_VARIABLE_NAME_FROM_JSON = "results";
 
 
@@ -56,6 +58,33 @@ public class MoviesNetworkUtils extends NetworkUtils{
         return url;
     }
 
+    @Nullable
+    private static URL getMovieVideosUrl(String videoId) {
+        final Uri.Builder baseUrl = new Uri.Builder().scheme(API_SCHEME).authority(API_BASE_URL).appendPath(API_VERSION);
+        Uri uri = baseUrl.appendPath(API_RESOURCE_MOVIE).appendPath(videoId).appendPath(API_RESOURCE_MOVIE_TRAILERS).appendQueryParameter(API_KEY_PARAM, API_KEY_VALUE).build();
+        Log.i(KEY_TAG, uri.toString());
+        URL url = null;
+        try {
+            url = new URL(uri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
+    private static URL getMovieReviewsUrl(String videoId) {
+        final Uri.Builder baseUrl = new Uri.Builder().scheme(API_SCHEME).authority(API_BASE_URL).appendPath(API_VERSION);
+        Uri uri = baseUrl.appendPath(API_RESOURCE_MOVIE).appendPath(videoId).appendPath(API_RESOURCE_MOVIE_REVIEW).appendQueryParameter(API_KEY_PARAM, API_KEY_VALUE).build();
+        Log.i(KEY_TAG, uri.toString());
+        URL url = null;
+        try {
+            url = new URL(uri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
     private static URL getMovieURL(int movieId) {
         return getMoviesUrl(String.valueOf(movieId));
     }
@@ -65,6 +94,17 @@ public class MoviesNetworkUtils extends NetworkUtils{
         String fullPosterPath = API_IMAGE_BASE_URL.concat(movie.getPosterPathUrl());
         movie.setPosterPathUrl(fullPosterPath);
         return movie;
+    }
+
+
+    private static MovieVideo generateMovieVideoFromJson(JSONObject jsonObject) {
+        MovieVideo video = new Gson().fromJson(jsonObject.toString(), MovieVideo.class);
+        return video;
+    }
+
+    private static MovieReview generateMovieReviewFromJson(JSONObject jsonObject) {
+        MovieReview review = new Gson().fromJson(jsonObject.toString(), MovieReview.class);
+        return review;
     }
 
     public static List<Movie> getMovies(MovieSortOrder sortOrder) throws IOException, JSONException {
@@ -88,6 +128,28 @@ public class MoviesNetworkUtils extends NetworkUtils{
             movies.add(movie);
         }
         return movies;
+    }
+
+    public static List<MovieVideo> getMovieVideosFormMovie(Movie movie) throws IOException, JSONException {
+        List<MovieVideo> videos = new ArrayList<>();
+        String responseFromURL = getResponseFromURL(getMovieVideosUrl(String.valueOf(movie.getId())));
+        JSONArray jsonArray = new JSONObject(responseFromURL).getJSONArray(RESULT_VARIABLE_NAME_FROM_JSON);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            MovieVideo video = generateMovieVideoFromJson(jsonArray.getJSONObject(i));
+            videos.add(video);
+        }
+        return videos;
+    }
+
+    public static List<MovieReview> getMovieReviewFormMovie(Movie movie) throws IOException, JSONException {
+        List<MovieReview> reviews = new ArrayList<>();
+        String responseFromURL = getResponseFromURL(getMovieReviewsUrl(String.valueOf(movie.getId())));
+        JSONArray jsonArray = new JSONObject(responseFromURL).getJSONArray(RESULT_VARIABLE_NAME_FROM_JSON);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            MovieReview review = generateMovieReviewFromJson(jsonArray.getJSONObject(i));
+            reviews.add(review);
+        }
+        return reviews;
     }
 
     public static Movie getMovieWithId(Integer id) throws IOException, JSONException {

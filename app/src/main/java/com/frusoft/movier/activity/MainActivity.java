@@ -25,6 +25,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.frusoft.movier.util.MovieDetailFetcher.EXTRA_KEY_MOVIE_ID;
+
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
 
     @BindView(R.id.pb_loading_indicator)
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mAdapter = new MoviesAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener()).execute(MovieSortOrder.MOST_POPULAR);
+        new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener(),this).execute(MovieSortOrder.MOST_POPULAR);
 
     }
 
@@ -73,10 +75,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         int id = item.getItemId();
         switch (id) {
             case R.id.action_sort_high_rating:
-                new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener()).execute(MovieSortOrder.HIGH_RATING);
+                new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener(),this).execute(MovieSortOrder.HIGH_RATING);
                 break;
             case R.id.action_sort_most_popular:
-                new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener()).execute(MovieSortOrder.MOST_POPULAR);
+                new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener(),this).execute(MovieSortOrder.MOST_POPULAR);
+                break;
+            case R.id.action_sort_favorite:
+                new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener(),this).execute(MovieSortOrder.FAVORITES);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -96,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     @Override
     public void onClick(Movie movie) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
-        intent.putExtra(MovieDetailActivity.EXTRA_KEY_MOVIE_ID, movie.getId());
+        intent.putExtra(EXTRA_KEY_MOVIE_ID, movie.getId());
         startActivity(intent);
     }
 

@@ -6,5 +6,5 @@ package com.frusoft.movier.model;
 
 @SuppressWarnings("DefaultFileTemplate")
 public enum MovieSortOrder {
-    MOST_POPULAR, HIGH_RATING
+    MOST_POPULAR, FAVORITES, HIGH_RATING
 }

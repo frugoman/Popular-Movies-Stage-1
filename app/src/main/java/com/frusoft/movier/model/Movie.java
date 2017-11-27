@@ -2,6 +2,8 @@ package com.frusoft.movier.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by nfrugoni on 8/10/17.
  */
@@ -20,15 +22,51 @@ public class Movie {
     @SerializedName("poster_path")
     private String posterPathUrl;
     private Double popularity;
-    private MovieVideo movieVideo;
-    private MovieReview movieReview;
+    private List<MovieVideo> movieVideo;
+    private List<MovieReview> movieReview;
 
-    public MovieVideo getMovieVideo() {
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public void setVoteAverage(String voteAverage) {
+        this.voteAverage = voteAverage;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public Double getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(Double popularity) {
+        this.popularity = popularity;
+    }
+
+    public List<MovieVideo> getMovieVideos() {
         return movieVideo;
     }
 
-    public void setMovieVideo(MovieVideo movieVideo) {
+    public void setMovieVideos(List<MovieVideo> movieVideo) {
         this.movieVideo = movieVideo;
+    }
+
+    public List<MovieReview> getMovieReview() {
+        return movieReview;
+    }
+
+    public void setMovieReviews(List<MovieReview> movieReview) {
+        this.movieReview = movieReview;
     }
 
     public int getId() {

@@ -4,7 +4,7 @@ package com.frusoft.movier.model;
  * Created by nfrugoni on 13/11/17.
  */
 
-class MovieReview {
+public class MovieReview {
     private String id;
     private String author;
     private String content;
