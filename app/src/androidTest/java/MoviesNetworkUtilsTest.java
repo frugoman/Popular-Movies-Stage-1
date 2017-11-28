@@ -26,10 +26,7 @@ public class MoviesNetworkUtilsTest {
             List<MovieVideo> videos = MoviesNetworkUtils.getMovieVideosFormMovie(movie);
             Assert.assertTrue(videos.size() == 2);
             movie.setMovieVideos(videos);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
             fail();
         }
@@ -43,10 +40,7 @@ public class MoviesNetworkUtilsTest {
             List<MovieReview> reviews = MoviesNetworkUtils.getMovieReviewFormMovie(movie);
             Assert.assertTrue(reviews.size() == 5);
             movie.setMovieReviews(reviews);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
             fail();
         }

@@ -18,7 +18,6 @@ import java.util.List;
 
 public class MovieDetailReviewsAdapter extends RecyclerView.Adapter<MovieDetailReviewsAdapter.MovieReviewViewHolder> {
 
-    private final MovieReviewAdapterOnClickHandler onClickHandler;
     private List<MovieReview> reviewList;
 
     @Override
@@ -46,28 +45,14 @@ public class MovieDetailReviewsAdapter extends RecyclerView.Adapter<MovieDetailR
         notifyDataSetChanged();
     }
 
-    public interface MovieReviewAdapterOnClickHandler{
-        void onClick(MovieReview movieReview);
-    }
-
-    public MovieDetailReviewsAdapter(MovieReviewAdapterOnClickHandler onClickHandler) {
-        this.onClickHandler = onClickHandler;
-    }
-
-    public class MovieReviewViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MovieReviewViewHolder extends RecyclerView.ViewHolder {
 
         MovieReviewViewBinding mBinding;
 
         public MovieReviewViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            MovieReview review = reviewList.get(adapterPosition);
-            onClickHandler.onClick(review);
-        }
+
     }
 }

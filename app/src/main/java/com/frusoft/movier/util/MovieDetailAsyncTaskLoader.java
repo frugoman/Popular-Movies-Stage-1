@@ -18,38 +18,21 @@ import java.util.List;
  * Created by nfrugoni on 9/10/17.
  */
 
-public class MovieDetailFetcher extends AsyncTaskLoader<Movie> {
+public class MovieDetailAsyncTaskLoader extends AsyncTaskLoader<Movie> {
 
     private MovieDetailsLoaderHandler loaderHandler;
 
     public static final String EXTRA_KEY_MOVIE_ID = "movieID";
 
-    Bundle aBundle;
+    private Bundle aBundle;
 
-    public MovieDetailFetcher(Context context, Bundle args, MovieDetailsLoaderHandler callbackHandler) {
+    public MovieDetailAsyncTaskLoader(Context context, Bundle args, MovieDetailsLoaderHandler callbackHandler) {
         super(context);
         aBundle = args;
         loaderHandler = callbackHandler;
     }
 
-    @Override
-    protected void onStartLoading() {
-        super.onStartLoading();
-    }
-
-    @Override
-    protected void onStopLoading() {
-        super.onStopLoading();
-    }
-
-    @Override
-    protected void onReset() {
-        super.onReset();
-    }
-
     public interface MovieDetailsLoaderHandler{
-        void onMovieReviewsFetched(List<MovieReview> reviews);
-        void onMovieVideosFetched(List<MovieVideo> videos);
         void onIsMovieSavedInFavorites(boolean isInFavorites);
     }
 
@@ -65,15 +48,13 @@ public class MovieDetailFetcher extends AsyncTaskLoader<Movie> {
             List<MovieVideo> movieVideosFormMovie = MoviesNetworkUtils.getMovieVideosFormMovie(movie);
             movie.setMovieVideos(movieVideosFormMovie);
 
-
-            loaderHandler.onMovieReviewsFetched(movieReviewFormMovie);
-            loaderHandler.onMovieVideosFetched(movieVideosFormMovie);
             loaderHandler.onIsMovieSavedInFavorites(MoviesDBUtils.isMovieInFavorites(movie, getContext()));
-
 
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return movie;
     }
+
+
 }

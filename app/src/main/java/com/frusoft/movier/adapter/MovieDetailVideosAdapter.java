@@ -28,9 +28,14 @@ public class MovieDetailVideosAdapter extends RecyclerView.Adapter<MovieDetailVi
     }
 
     @Override
-    public void onBindViewHolder(MovieVideoViewHolder holder, int position) {
+    public void onBindViewHolder(final MovieVideoViewHolder holder, int position) {
         holder.mBinding = DataBindingUtil.bind(holder.itemView);
-
+        holder.mBinding.detailShareVideoIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickHandler.onShareVideoButtonClick(movieVideoList.get(holder.getAdapterPosition()));
+            }
+        });
         holder.mBinding.videoTitleTv.setText(movieVideoList.get(position).getName());
     }
 
@@ -46,27 +51,30 @@ public class MovieDetailVideosAdapter extends RecyclerView.Adapter<MovieDetailVi
     }
 
     public interface MovieVideoAdapterOnClickHandler {
-        void onClick(MovieVideo movieVideo);
+        void onMovieVideoButtonClick(MovieVideo movieVideo);
+
+        void onShareVideoButtonClick(MovieVideo videoToShare);
     }
 
     public MovieDetailVideosAdapter(MovieDetailVideosAdapter.MovieVideoAdapterOnClickHandler onClickHandler) {
         this.onClickHandler = onClickHandler;
     }
 
-    public class MovieVideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MovieVideoViewHolder extends RecyclerView.ViewHolder {
 
         MovieVideoButtonBinding mBinding;
 
         public MovieVideoViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
-        }
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int adapterPosition = getAdapterPosition();
+                    MovieVideo movieVideo = movieVideoList.get(adapterPosition);
+                    onClickHandler.onMovieVideoButtonClick(movieVideo);
+                }
+            });
 
-        @Override
-        public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            MovieVideo movieVideo = movieVideoList.get(adapterPosition);
-            onClickHandler.onClick(movieVideo);
         }
     }
 }

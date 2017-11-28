@@ -2,11 +2,9 @@
     <string name="app_name">Movier</string>
     <string name="error_fetching_movies">There was an error retrieving the movies.  Try again later!</string>
     <string name="card_poster_image_content_description">Poster Image</string>
-    <string name="vote_average_title">Vote Average: %s</string>
+    <string name="vote_average_title" formatted="false">Vote Average: %s</string>
     <string name="original_title">Original Title</string>
-    <string name="user_rating">User Rating</string>
     <string name="release_date">Release Date</string>
-    <string name="plot_synopsis">Plot Synopsis</string>
     <string name="action_sort_by_most_popular">Sort by Most Popular</string>
     <string name="action_sort_by_high_rating">Sort by High Rating</string>
     <string name="movie_poster_content_description">Movie poster</string>
@@ -17,4 +15,12 @@
     <string name="fab_fav_movie_detail_action_delete_toast">Deleted from favorites</string>
     <string name="fab_fav_movie_detail_action_add_toast">Saved as favorite</string>
     <string name="action_sort_by_favorite">Show Favorites</string>
+    <string name="youtube_watch_baseURL_web" translatable="false">http://www.youtube.com/watch?v=</string>
+    <string name="send_trailer_to">Send the trailer to:</string>
+    <string name="send_video_content_message" formatted="false">Watch the trailer for %s.\n %s%s</string>
+    <string name="trailer_play_icon">trailer icon</string>
+    <string name="share_trailer_accessibility">share trailer</string>
+    <string name="dateFormatFromResponse" translatable="false">yyyy-MM-dd</string>
+    <string name="youtube_site_name">youtube</string>
+    <string name="youtube_intent_content">vnd.youtube:</string>
 </resources>

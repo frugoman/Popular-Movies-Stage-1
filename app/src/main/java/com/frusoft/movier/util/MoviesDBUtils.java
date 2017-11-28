@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.frusoft.movier.model.Movie;
-import com.frusoft.movier.model.MovieContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +24,7 @@ public class MoviesDBUtils {
         values.put(MovieEntry.COLUMN_MOVIE_POSTER_URL, String.valueOf(movie.getPosterPathUrl()));
         values.put(MovieEntry.COLUMN_MOVIE_USER_RATING, String.valueOf(movie.getVoteAverage()));
         values.put(MovieEntry.COLUMN_MOVIE_ID, String.valueOf(movie.getId()));
-        Uri insert = context.getContentResolver().insert(MovieEntry.CONTENT_URI, values);
-        return insert;
+        return context.getContentResolver().insert(MovieEntry.CONTENT_URI, values);
     }
 
     public static int deleteMovieFromFavorites(Movie movie, Context context) {
@@ -36,7 +34,9 @@ public class MoviesDBUtils {
     public static boolean isMovieInFavorites(Movie movie, Context context) {
         Uri uri = MovieEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(movie.getId())).build();
         Cursor query = context.getContentResolver().query(uri, null, null, null, null);
-        return (query != null && query.getCount() > 0);
+        boolean isFaved = query != null && query.getCount() > 0;
+        if (query != null) query.close();
+        return isFaved;
     }
 
     public static List<Movie> getAllMoviesFromFavorites(Context context) {
@@ -53,6 +53,7 @@ public class MoviesDBUtils {
                 movies.add(m);
             }
         }
+        if (query != null) query.close();
         return movies;
     }
 }

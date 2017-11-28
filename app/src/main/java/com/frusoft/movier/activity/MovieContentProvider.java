@@ -8,12 +8,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.frusoft.movier.model.MovieContract;
 import com.frusoft.movier.util.MoviesDBHelper;
 
-import static android.provider.BaseColumns._ID;
 import static com.frusoft.movier.model.MovieContract.MovieEntry.COLUMN_FAV_DATE;
 import static com.frusoft.movier.model.MovieContract.MovieEntry.COLUMN_MOVIE_ID;
 import static com.frusoft.movier.model.MovieContract.MovieEntry.MOVIES_TABLE_NAME;
@@ -24,11 +22,11 @@ import static com.frusoft.movier.model.MovieContract.MovieEntry.MOVIES_TABLE_NAM
 
 public class MovieContentProvider extends ContentProvider {
 
-    MoviesDBHelper moviesDBHelper;
+    private MoviesDBHelper moviesDBHelper;
 
     private static final int MOVIES = 100;
     private static final int MOVIES_WITH_ID = 101;
-    public static final UriMatcher uriMatcher = buildUriMatcher();
+    private static final UriMatcher uriMatcher = buildUriMatcher();
 
     private static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -96,9 +94,11 @@ public class MovieContentProvider extends ContentProvider {
         int deleted = -1;
         switch (uriMatcher.match(uri)) {
             case MOVIES:
-                String[] whereArgs = {selectionArgs[0]};
-                String whereClause = COLUMN_MOVIE_ID + "=?";
-                deleted = moviesDBHelper.getWritableDatabase().delete(MOVIES_TABLE_NAME, whereClause, whereArgs);
+                if (selectionArgs != null && selectionArgs.length > 0) {
+                    String[] whereArgs = {selectionArgs[0]};
+                    String whereClause = COLUMN_MOVIE_ID + "=?";
+                    deleted = moviesDBHelper.getWritableDatabase().delete(MOVIES_TABLE_NAME, whereClause, whereArgs);
+                }
                 break;
             default:
                 throw new IllegalArgumentException("No delete method for that URI");
