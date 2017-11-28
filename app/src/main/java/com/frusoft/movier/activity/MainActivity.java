@@ -1,6 +1,8 @@
 package com.frusoft.movier.activity;
 
 import android.content.Intent;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,17 +19,16 @@ import com.frusoft.movier.R;
 import com.frusoft.movier.adapter.MoviesAdapter;
 import com.frusoft.movier.model.Movie;
 import com.frusoft.movier.model.MovieSortOrder;
-import com.frusoft.movier.util.AsyncTaskCompletionListener;
-import com.frusoft.movier.util.MoviesArrayFetcher;
+import com.frusoft.movier.util.MoviesArrayAsyncTaskLoader;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.frusoft.movier.util.MovieDetailFetcher.EXTRA_KEY_MOVIE_ID;
+import static com.frusoft.movier.util.MovieDetailAsyncTaskLoader.EXTRA_KEY_MOVIE_ID;
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler, LoaderManager.LoaderCallbacks<List<Movie>> {
 
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
@@ -37,8 +38,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     RecyclerView mRecyclerView;
 
     private MoviesAdapter mAdapter;
+    private static final int MOVIES_ARRAY_LOADER_ID = 951;
+    MovieSortOrder selectedSortOrder;
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -49,9 +53,16 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new MoviesAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
+        selectedSortOrder = MovieSortOrder.MOST_POPULAR;
+    }
 
-        new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener(),this).execute(MovieSortOrder.MOST_POPULAR);
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        Bundle bundle = new Bundle();
+        bundle.putString(MoviesArrayAsyncTaskLoader.EXTRA_KEY_MOVIES_SORT_ORDER, selectedSortOrder.toString());
+        getSupportLoaderManager().restartLoader(MOVIES_ARRAY_LOADER_ID, bundle, this);
     }
 
     private void showErrorMessage() {
@@ -73,17 +84,23 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        MovieSortOrder sortOrder = null;
         switch (id) {
             case R.id.action_sort_high_rating:
-                new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener(),this).execute(MovieSortOrder.HIGH_RATING);
+                sortOrder = MovieSortOrder.HIGH_RATING;
                 break;
             case R.id.action_sort_most_popular:
-                new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener(),this).execute(MovieSortOrder.MOST_POPULAR);
+                sortOrder = MovieSortOrder.MOST_POPULAR;
                 break;
             case R.id.action_sort_favorite:
-                new MoviesArrayFetcher(new MoviesFetcherOnCompleteListener(),this).execute(MovieSortOrder.FAVORITES);
+                sortOrder = MovieSortOrder.FAVORITES;
                 break;
         }
+        selectedSortOrder = sortOrder;
+        Bundle bundle = new Bundle();
+        bundle.putString(MoviesArrayAsyncTaskLoader.EXTRA_KEY_MOVIES_SORT_ORDER, selectedSortOrder.toString());
+        getSupportLoaderManager().restartLoader(MOVIES_ARRAY_LOADER_ID, bundle, this);
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -105,23 +122,34 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         startActivity(intent);
     }
 
-    private class MoviesFetcherOnCompleteListener implements AsyncTaskCompletionListener<List<Movie>> {
+    @Override
+    public Loader<List<Movie>> onCreateLoader(int id, final Bundle args) {
+        return new MoviesArrayAsyncTaskLoader(this, args) {
+            @Override
+            protected void onStartLoading() {
+                super.onStartLoading();
+                if (args == null) return;
 
-        @Override
-        public void OnFetchPreExecute() {
-            mAdapter.setMoviesList(null);
-            showResultsView();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void OnFetchCompleteWithResult(List<Movie> movies) {
-            if (movies == null) {
-                showErrorMessage();
-            } else {
-                mAdapter.setMoviesList(movies);
+                mAdapter.setMoviesList(null);
+                showResultsView();
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+                forceLoad();
             }
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movies) {
+        if (movies == null) {
+            showErrorMessage();
+        } else {
+            mAdapter.setMoviesList(movies);
         }
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Movie>> loader) {
+        mAdapter.setMoviesList(null);
     }
 }

@@ -98,13 +98,11 @@ public class MoviesNetworkUtils extends NetworkUtils {
 
 
     private static MovieVideo generateMovieVideoFromJson(JSONObject jsonObject) {
-        MovieVideo video = new Gson().fromJson(jsonObject.toString(), MovieVideo.class);
-        return video;
+        return new Gson().fromJson(jsonObject.toString(), MovieVideo.class);
     }
 
     private static MovieReview generateMovieReviewFromJson(JSONObject jsonObject) {
-        MovieReview review = new Gson().fromJson(jsonObject.toString(), MovieReview.class);
-        return review;
+        return new Gson().fromJson(jsonObject.toString(), MovieReview.class);
     }
 
     public static List<Movie> getMovies(MovieSortOrder sortOrder) throws IOException, JSONException {

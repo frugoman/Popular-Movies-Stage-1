@@ -6,7 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,25 +21,23 @@ import com.frusoft.movier.databinding.ActivityMovieDetailBinding;
 import com.frusoft.movier.model.Movie;
 import com.frusoft.movier.model.MovieReview;
 import com.frusoft.movier.model.MovieVideo;
-import com.frusoft.movier.util.MovieDetailFetcher;
+import com.frusoft.movier.util.MovieDetailAsyncTaskLoader;
 import com.frusoft.movier.util.MoviesDBUtils;
-import com.frusoft.movier.util.MoviesNetworkUtils;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.frusoft.movier.util.MovieDetailFetcher.EXTRA_KEY_MOVIE_ID;
+import static com.frusoft.movier.util.MovieDetailAsyncTaskLoader.EXTRA_KEY_MOVIE_ID;
+import static java.text.DateFormat.getDateInstance;
 
-public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Movie>, MovieDetailReviewsAdapter.MovieReviewAdapterOnClickHandler, MovieDetailVideosAdapter.MovieVideoAdapterOnClickHandler, MovieDetailFetcher.MovieDetailsLoaderHandler {
+public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Movie>, MovieDetailVideosAdapter.MovieVideoAdapterOnClickHandler, MovieDetailAsyncTaskLoader.MovieDetailsLoaderHandler {
 
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
@@ -88,7 +85,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
 
         });
 
-        reviewsAdapter = new MovieDetailReviewsAdapter(this);
+
+        reviewsAdapter = new MovieDetailReviewsAdapter();
         videosAdapter = new MovieDetailVideosAdapter(this);
     }
 
@@ -101,8 +99,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         String releaseDate = movie.getReleaseDate();
         String formatedDate;
         try {
-            Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(releaseDate);
-            formatedDate = new SimpleDateFormat("MM/dd/yyyy").format(parsedDate);
+            Date parsedDate = new SimpleDateFormat(getString(R.string.dateFormatFromResponse), Locale.US).parse(releaseDate);
+            formatedDate = getDateInstance().format(parsedDate);
         } catch (ParseException e) {
             e.printStackTrace();
             formatedDate = releaseDate;
@@ -110,12 +108,13 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         mBinding.tvDetailsReleaseDate.setText(formatedDate);
         mBinding.tvDetailsOverview.setText(movie.getOverview());
 
+        showReviewsView(movie.getMovieReview());
+        showTrailersView(movie.getMovieVideos());
+        setFavFabState();
     }
 
-    private void setFavFabState(final boolean isMovieFaved) {
-        this.isMovieFaved = isMovieFaved;
+    private void setFavFabState() {
         if (isMovieFaved) {
-
             mBinding.fabFavouriteMovieButton.setImageResource(R.drawable.ic_star_black_24dp);
         } else {
             mBinding.fabFavouriteMovieButton.setImageResource(R.drawable.ic_star_border_black_24dp);
@@ -202,7 +201,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     @Override
     public Loader<Movie> onCreateLoader(int id, final Bundle args) {
 
-        return new MovieDetailFetcher(this, args, this) {
+        return new MovieDetailAsyncTaskLoader(this, args, this) {
             @Override
             protected void onStartLoading() {
                 super.onStartLoading();
@@ -213,7 +212,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                 reviewsAdapter.setReviewList(null);
                 videosAdapter.setMovieVideoList(null);
                 mLoadingIndicator.setVisibility(View.VISIBLE);
-                mBinding.llDetailWrapper.setVisibility(View.GONE);
+                mBinding.llDetailWrapper.setVisibility(View.INVISIBLE);
                 if (mMovieCached != null) {
                     deliverResult(mMovieCached);
                 } else {
@@ -231,7 +230,6 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         };
     }
 
-
     @Override
     public void onLoadFinished(Loader<Movie> loader, Movie data) {
         if (data == null) {
@@ -241,48 +239,41 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
             videosAdapter.setMovieVideoList(data.getMovieVideos());
             showResultsView();
             setMovieDataIntoViews(data);
-
         }
         mLoadingIndicator.setVisibility(View.GONE);
     }
 
     @Override
     public void onLoaderReset(Loader<Movie> loader) {
-    }
-
-
-    @Override
-    public void onClick(MovieReview movieReview) {
-
+        reviewsAdapter.setReviewList(null);
+        videosAdapter.setMovieVideoList(null);
     }
 
     @Override
-    public void onClick(MovieVideo movieVideo) {
-        if (movieVideo.getSite().equalsIgnoreCase("youtube")) {
+    public void onMovieVideoButtonClick(MovieVideo movieVideo) {
+        if (movieVideo.getSite().equalsIgnoreCase(getString(R.string.youtube_site_name))) {
             try {
-                Intent ytAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + movieVideo.getKey()));
+                Intent ytAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_intent_content) + movieVideo.getKey()));
                 startActivity(ytAppIntent);
             } catch (ActivityNotFoundException e) {
-                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + movieVideo.getKey()));
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.youtube_watch_baseURL_web) + movieVideo.getKey()));
                 startActivity(webIntent);
             }
         }
     }
 
     @Override
-    public void onMovieReviewsFetched(List<MovieReview> reviews) {
-        showReviewsView(reviews);
-    }
-
-    @Override
-    public void onMovieVideosFetched(List<MovieVideo> videos) {
-
-        showTrailersView(videos);
+    public void onShareVideoButtonClick(MovieVideo videoToShare) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        String videoUrlMessage = getString(R.string.send_video_content_message, mMovieCached.getTitle(), getString(R.string.youtube_watch_baseURL_web), videoToShare.getKey());
+        shareIntent.putExtra(Intent.EXTRA_TEXT, videoUrlMessage);
+        shareIntent.setType("text/plain");
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.send_trailer_to)));
     }
 
     @Override
     public void onIsMovieSavedInFavorites(boolean isInFavorites) {
-
-        setFavFabState(isInFavorites);
+        isMovieFaved = isInFavorites;
     }
 }
